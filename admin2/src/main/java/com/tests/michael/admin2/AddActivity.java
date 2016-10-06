@@ -70,8 +70,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
             case R.id.tvDriver:
                 getDrivers();
                 lvDrivers.setVisibility(View.VISIBLE);
-                adapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_list_item_1, driverBalanceList);
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, driverBalanceList);
                 lvDrivers.setAdapter(adapter);
                 break;
             case R.id.button:

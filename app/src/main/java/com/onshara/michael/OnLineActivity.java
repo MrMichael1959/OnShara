@@ -341,8 +341,6 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                 finish();
                 return null;
             }
-//            IdLtLn c = getCoords("Героев Труда 28");
-//            IdLtLn c2 = getCoords2("Героев Труда 28");
 
             initSocket();
             requestSocket(MyJson.login(id - 2, driver, password, device_id), false);

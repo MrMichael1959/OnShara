@@ -24,10 +24,10 @@ public class MyJson {
             obj_Params.put("dsName","shara");
             obj_Params.put("useGpsForSectorAssigning","NEVER");
             obj_Params.put("useGpsTaximeter","false");
-            obj_Params.put("clientVersion","ad-1.18.9636");
+            obj_Params.put("clientVersion","ad-1.21.10057");
             obj_Params.put("deviceId",device_id);
             obj_Params.put("password",password);
-            obj_Params.put("protocolVersion","1.9");
+            obj_Params.put("protocolVersion","11");
             obj_Params.put("useOrderToFieldForSectorAssigning","NEVER");
 
             obj_Login.put("id", id);

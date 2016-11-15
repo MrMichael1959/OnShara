@@ -52,20 +52,6 @@ import java.util.concurrent.TimeUnit;
 
 public class OnLineActivity extends AppCompatActivity implements OnClickListener {
 
-    final String city = "Харьков";
-    final String script_host = "http://138.201.183.102/shara/";
-    final String SYSTEM = "system";
-    final String PORT = "port";
-    final String SERVICE = "service";
-    final String DRIVER = "driver";
-    final String PASSWORD = "password";
-    final String ON_TIME = "on_time";
-    final String ON_5MIN = "on_5min";
-    final String COST = "cost";
-    final String DEVICE_ID = "device_id";
-    final String DIRS = "dirs";
-    final String SHARA_PREF = "shara_pref";
-
     TextView tvNET;
     TextView tvGPS;
     TextView tvAddress;
@@ -106,6 +92,8 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     double currlatitude = 0.0;
     double currlongitude = 0.0;
     long currlocationTime = 0L;
+    String city = "";
+    String scripts_host = "";
     String callNumber = null;
     String tvOnLineText = "";
     String system = "";
@@ -165,7 +153,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        sp = getSharedPreferences(SHARA_PREF,MODE_PRIVATE);
+        sp = getSharedPreferences("shara_pref",MODE_PRIVATE);
         loadSharaPreferences();
         if (device_id.equals("")) {
             device_id = MyDevice.makeDeviceId();
@@ -284,23 +272,24 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     void saveSharaPreferences() {
 //--------------------------------------------------------------------------------------------------
         SharedPreferences.Editor ed = sp.edit();
-        ed.putString(DEVICE_ID, device_id);
+        ed.putString("device_id", device_id);
         ed.commit();
     }
 
 //--------------------------------------------------------------------------------------------------
     void loadSharaPreferences() {
 //--------------------------------------------------------------------------------------------------
-        system = sp.getString(SYSTEM, "");
-        port = sp.getString(PORT, "");
-        service = sp.getString(SERVICE, "");
-        driver = sp.getString(DRIVER, "");
-        password = sp.getString(PASSWORD, "");
-        cost = Double.valueOf(sp.getString(COST, "0.0"));
-        sdirs = sp.getString(DIRS, ",").substring(1);
-        ontime = sp.getBoolean(ON_TIME, false);
-        on5min = sp.getBoolean(ON_5MIN, false);
-        device_id = sp.getString(DEVICE_ID, "");
+        scripts_host = sp.getString("scripts_host", "");
+        system = sp.getString("system", "");
+        port = sp.getString("port", "");
+        service = sp.getString("service", "");
+        driver = sp.getString("driver", "");
+        password = sp.getString("password", "");
+        cost = Double.valueOf(sp.getString("cost", "0.0"));
+        sdirs = sp.getString("dirs", ",").substring(1);
+        ontime = sp.getBoolean("on_time", false);
+        on5min = sp.getBoolean("on_5min", false);
+        device_id = sp.getString("device_id", "");
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -955,7 +944,7 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
             return resultString;
         }
         void  init() {
-            String script = script_host + "init.php";
+            String script = scripts_host + "init.php";
             String pars = "par1=" + driver + "&" + "par2=" + password;
             String _user = toScript(script, pars);
             JSONObject juser;
@@ -968,6 +957,7 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
                 sPay = juser.getString("pay");
                 user = juser.getString("user");
                 referer = juser.getString("referer");
+                city = juser.getString("city");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -975,7 +965,7 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
             pay = Double.parseDouble(sPay);
         }
         String  setBalance(String bal, String pay, String ord_id, String logs) {
-            String script = script_host + "set_balance.php";
+            String script = scripts_host + "set_balance.php";
             String s = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
             String pars = "par1=" + user + "&"  + "par2=" + referer + "&" + "par3=" + s + "&"
                         + "par4=" + bal +  "&"  + "par5=" + pay +     "&" + "par6=" + ord_id + "&"

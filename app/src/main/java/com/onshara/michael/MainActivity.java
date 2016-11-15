@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     SharedPreferences sp;
     String lastModified;
-    String modifiedFile = "http://sumo-ua.com/etaxi/shara.apk";
+    String modifiedFile = "http://185.25.119.3/taxoid/shara.apk";
+    String scripts_host = "http://185.25.119.3/taxoid/";
 
     final String SYSTEM = "system";
     final String PORT = "port";
@@ -63,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         btnPayment.setOnClickListener(this);
 
         sp = getSharedPreferences(SHARA_PREF,MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putString("scripts_host", scripts_host);
+        ed.apply();
 
         if(checkUpdate()) {
             UpdateApp app = new UpdateApp();

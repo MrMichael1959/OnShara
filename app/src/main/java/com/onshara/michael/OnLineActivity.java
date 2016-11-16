@@ -1,21 +1,20 @@
 package com.onshara.michael;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -35,11 +34,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -98,7 +95,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     String tvOnLineText = "";
     String system = "";
     String port = "";
-    String service = "";
+    String service = "e(taxi)";
     String password = "";
     String driver = "";
     String referer = "";
@@ -183,7 +180,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                     1000 * 10, 10, locationListener);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     1000 * 10, 10, locationListener);
-        } catch(SecurityException e){}
+        } catch(SecurityException e){ e.printStackTrace(); }
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -193,7 +190,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         super.onPause();
         try {
             locationManager.removeUpdates(locationListener);
-        } catch(SecurityException e){}
+        } catch(SecurityException e){ e.printStackTrace(); }
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -273,7 +270,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
 //--------------------------------------------------------------------------------------------------
         SharedPreferences.Editor ed = sp.edit();
         ed.putString("device_id", device_id);
-        ed.commit();
+        ed.apply();
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -295,7 +292,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
 //--------------------------------------------------------------------------------------------------
     String getAddress(){
 //--------------------------------------------------------------------------------------------------
-        if(currlatitude==0.0 || currlongitude==0.0) { return null; };
+        if(currlatitude==0.0 || currlongitude==0.0) { return null; }
         Geocoder coder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses;
         String address = null;
@@ -313,8 +310,8 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     class Daemon extends AsyncTask<Void, String, Void> {
 //**************************************************************************************************
         Socket socket = null;
-        protected static final String server_IP = "136.243.10.152";
-        private static final int server_Port = 9741;
+        String server_IP = "136.243.10.152";
+        int server_Port = 9741;
 
         @Override
         protected void onPreExecute() {
@@ -415,7 +412,8 @@ Log.d("Canceled ====>>>","Out");
                 toast.show();
             }
             if(values[0].equals("balance")) {
-                tvBalance.setText(tvBalance.getText() + String.valueOf(balance));
+                String s = tvBalance.getText() + String.valueOf(balance);
+                tvBalance.setText(s);
             }
             if(values[0].equals("tvSectorInfo")) { tvSectorInfo.setText(values[1]); }
             if(values[0].equals("tvBodyOnLine") && status.equals("onLine")) {
@@ -436,10 +434,7 @@ Log.d("Canceled ====>>>","Out");
         void initSocket() {
             try {
                 socket = new Socket(server_IP, server_Port);
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -453,9 +448,9 @@ Log.d("Canceled ====>>>","Out");
                     if(jobj.has("mg"))  {
                         mgHandler(jobj);
                     }
-                    if(jobj.has("chsc"))  {
-                        chscHandler(jobj);
-                    }
+//                    if(jobj.has("chsc"))  {
+//                        chscHandler(jobj);
+//                    }
                     if(jobj.has("dr"))    {
                         drHandler(jobj);
                     }
@@ -470,10 +465,10 @@ Log.d("Canceled ====>>>","Out");
                     }
                     if(jobj.has("eo"))    {
                         eoHandler(jobj);
-                    };
+                    }
                     if(jobj.has("rid"))   {
                         continue;
-                    };
+                    }
 
                     String response = MyJson.resp(id, jobj.getInt("id"));
                     requestSocket(response, true);
@@ -482,22 +477,22 @@ Log.d("Canceled ====>>>","Out");
                 e.printStackTrace();
             }
         }
-        void chscHandler(JSONObject obj) {
-            try {
-                JSONObject chsc = obj.getJSONObject("chsc");
-                int sid = chsc.getInt("id");
-                int dc = chsc.getInt("dc");
-          } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+//        void chscHandler(JSONObject obj) {
+//            try {
+//                JSONObject chsc = obj.getJSONObject("chsc");
+//                int sid = chsc.getInt("id");
+//                int dc = chsc.getInt("dc");
+//          } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
         void drHandler(JSONObject obj) {
             try {
                 JSONObject dr = obj.getJSONObject("dr");
-                String data = "";
+                String data;
                 if(dr.has("dsc")) {
                     String nm = dr.getJSONObject("dsc").getString("nm");
-                    int sid = dr.getJSONObject("dsc").getInt("id");
+//                    int sid = dr.getJSONObject("dsc").getInt("id");
                     int dc = dr.getJSONObject("dsc").getInt("dc");
                     int dsp = dr.getInt("dsp");
                     data = "Сектор: " + nm + " (" + String.valueOf(dc) + " )" + "\n";
@@ -525,7 +520,7 @@ Log.d("======>>> ", te);
             try {
                 String orderId = String.valueOf(obj.getJSONObject("nooa").getInt("id"));
                 String op = obj.getJSONObject("nooa").getString("op");
-                String oc = obj.getJSONObject("nooa").getString("oc");
+//                String oc = obj.getJSONObject("nooa").getString("oc");
                 String ot = obj.getJSONObject("nooa").getString("ot");
                 String of = obj.getJSONObject("nooa").getString("of");
 //                int opt = obj.getJSONObject("nooa").getInt("opt");
@@ -559,9 +554,9 @@ Log.d("======>>>Distance ", String.valueOf(d));
                 if(c.lat==0.0 || c.lon==0.0) {
                     return;
                 }
-                for (int i=0; i<dirsLtLn.length; i++) {
-                    d = Sector.getDistance(c.lat, c.lon, dirsLtLn[i].lat, dirsLtLn[i].lon);
-Log.d("======>>>DirDistance ", String.valueOf(d));
+                for (IdLtLn aDirsLtLn : dirsLtLn) {
+                    d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
+                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         nooaAssign(id, orderId);
                         return;
@@ -620,14 +615,15 @@ Log.d("======>>>No coords To", "rejecting...");
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
-                for (int i=0; i<dirsLtLn.length; i++) {
-                    d = Sector.getDistance(c.lat, c.lon, dirsLtLn[i].lat, dirsLtLn[i].lon);
-Log.d("======>>>DirDistance ", String.valueOf(d));
+                for (IdLtLn aDirsLtLn : dirsLtLn) {
+                    d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
+                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         poAssign(id, orderId, sopt);
                         return;
+                    } else {
+                        rejectOrder(id, orderId, sopt);
                     }
-                    else { rejectOrder(id, orderId, sopt); }
                 }
 
             } catch (JSONException e) {
@@ -680,9 +676,9 @@ Log.d("======>>>No coords To", "");
                     npoAssign(id, orderId);
                     return;
                 }
-                for (int i=0; i<dirsLtLn.length; i++) {
-                    d = Sector.getDistance(dirsLtLn[i].lat, dirsLtLn[i].lon, c.lat, c.lon);
-Log.d("======>>>DirDistance ", String.valueOf(d));
+                for (IdLtLn aDirsLtLn : dirsLtLn) {
+                    d = Sector.getDistance(aDirsLtLn.lat, aDirsLtLn.lon, c.lat, c.lon);
+                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         npoAssign(id, orderId);
                     }
@@ -769,7 +765,7 @@ Log.d("=======>>","npoAssign");
             if(add) id++;
         }
         ArrayList<String> getData() {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             try {
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 while (in.available() > 0) {
@@ -781,7 +777,7 @@ Log.d("=======>>","npoAssign");
             return list;
         }
         boolean checkTime(String orderTime) {
-            String time = new SimpleDateFormat("HH:mm").format(new Date());
+            String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
             String items[] = time.split(":");
             int i = Integer.parseInt(items[0]);
             String orderItems[] = orderTime.split(":");
@@ -805,7 +801,7 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
 
                 try {
                     URL url = new URL(myURL + par);
-                    URLConnection conn = null;
+                    URLConnection conn;
                     conn = url.openConnection();
                     conn.connect();
                     if (((HttpURLConnection)conn).getResponseCode() != 200) {
@@ -841,8 +837,8 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
 
             String[] coords = resultString.split(" ");
 
-            Double lat = 0.0;
-            Double lon = 0.0;
+            Double lat;
+            Double lon;
             try {
                 lat = Double.parseDouble(coords[1]);
                 lon = Double.parseDouble(coords[0]);
@@ -856,97 +852,44 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
 
             return new IdLtLn(0, lat, lon);
         }
-    IdLtLn getCoords2(String address) {
-        String resultString = "";
-        try {
-            String myURL = "http://maps.google.com/maps/api/geocode/json?";
-            String par = "address=" + city + ", " + address + "&sensor=false";
-            par = URLEncoder.encode( par, "UTF-8");
-            try {
-                URL url = new URL(myURL + par);
-                URLConnection conn = null;
-                conn = url.openConnection();
-                conn.connect();
-                int responseCode = ((HttpURLConnection)conn).getResponseCode();
-                if ( responseCode != 200) {
-                    return new IdLtLn(0, 0.0, 0.0);
-                }
-
-                byte[] buffer = new byte[8192];
-                int bytesRead;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                while ((bytesRead = conn.getInputStream().read(buffer)) != -1) {
-                    baos.write(buffer, 0, bytesRead);
-                }
-                resultString = new String(baos.toByteArray(), "UTF-8");
-            } catch (MalformedURLException e) {
-                resultString = "MalformedURLException:" + e.getMessage();
-            } catch (IOException e) {
-                resultString = "IOException:" + e.getMessage();
-            } catch (Exception e) {
-                resultString = "Exception:" + e.getMessage();
+    String toScript(String... args) {
+        String resultString;
+        String pars = "";
+        for (int i=1; i<args.length; i++) {
+            if (i == args.length-1) {
+                pars += "par" + String.valueOf(i) + "=" + args[i];
+            } else {
+                pars += "par" + String.valueOf(i) + "=" + args[i] + "&";
             }
-        } catch (Exception e) { e.printStackTrace(); }
-
-        try {
-            JSONObject obj = new JSONObject(resultString);
-            resultString = obj.getJSONObject("response").
-                    getJSONObject("GeoObjectCollection").
-                    getJSONArray("featureMember").
-                    getJSONObject(0).
-                    getJSONObject("GeoObject").
-                    getJSONObject("Point").
-                    getString("pos");
-        } catch (JSONException e) { e.printStackTrace(); }
-
-        String[] coords = resultString.split(" ");
-
-        Double lat = 0.0;
-        Double lon = 0.0;
-        try {
-            lat = Double.parseDouble(coords[1]);
-            lon = Double.parseDouble(coords[0]);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return new IdLtLn(0, 0.0, 0.0);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return new IdLtLn(0, 0.0, 0.0);
         }
+        try {
+            URL url = new URL(args[0]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            OutputStream os = conn.getOutputStream();
+            byte[] data = pars.getBytes("UTF-8");
+            os.write(data); os.flush(); os.close();
 
-        return new IdLtLn(0, lat, lon);
+//                data = null;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            InputStream is = conn.getInputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) { baos.write(buffer, 0, bytesRead); }
+            data = baos.toByteArray();
+            baos.flush(); baos.close(); is.close();
+            resultString = new String(data, "UTF-8");
+            conn.disconnect();
+        } catch (MalformedURLException e) { resultString = "MalformedURLException:" + e.getMessage();
+        } catch (IOException e) { resultString = "IOException:" + e.getMessage();
+        } catch (Exception e) { resultString = "Exception:" + e.getMessage();
+        }
+        return resultString;
     }
-        String toScript(String script, String pars) {
-            String resultString = "";
-            try {
-                URL url = new URL(script);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-
-                OutputStream os = conn.getOutputStream();
-                byte[] data = pars.getBytes("UTF-8");
-                os.write(data); os.flush(); os.close();
-
-                data = null;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                InputStream is = conn.getInputStream();
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = is.read(buffer)) != -1) { baos.write(buffer, 0, bytesRead); }
-                data = baos.toByteArray();
-                baos.flush(); baos.close(); is.close();
-                resultString = new String(data, "UTF-8");
-                conn.disconnect();
-            } catch (MalformedURLException e) { resultString = "MalformedURLException:" + e.getMessage();
-            } catch (IOException e) { resultString = "IOException:" + e.getMessage();
-            } catch (Exception e) { resultString = "Exception:" + e.getMessage();
-            }
-            return resultString;
-        }
         void  init() {
             String script = scripts_host + "init.php";
-            String pars = "par1=" + driver + "&" + "par2=" + password;
-            String _user = toScript(script, pars);
+//            String pars = "par1=" + driver + "&" + "par2=" + password;
+            String _user = toScript(script, driver, password);
             JSONObject juser;
             String sBal = "";
             String sPay = "";
@@ -966,11 +909,9 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
         }
         String  setBalance(String bal, String pay, String ord_id, String logs) {
             String script = scripts_host + "set_balance.php";
-            String s = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
-            String pars = "par1=" + user + "&"  + "par2=" + referer + "&" + "par3=" + s + "&"
-                        + "par4=" + bal +  "&"  + "par5=" + pay +     "&" + "par6=" + ord_id + "&"
-                        + "par7=" + logs;
-            return toScript(script, pars);
+            String s = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.getDefault())
+                                                                        .format(new Date());
+            return toScript(script, user, referer, s, bal, pay, ord_id, logs);
         }
         boolean checkNumber(String address) {
             boolean b = false;

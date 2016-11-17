@@ -279,7 +279,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         scripts_host = sp.getString("scripts_host", "");
         system = sp.getString("system", "");
         port = sp.getString("port", "");
-        service = sp.getString("service", "");
+//        service = sp.getString("service", "");
         driver = sp.getString("driver", "");
         password = sp.getString("password", "");
         cost = Double.valueOf(sp.getString("cost", "0.0"));
@@ -911,7 +911,7 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
             String script = scripts_host + "set_balance.php";
             String s = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.getDefault())
                                                                         .format(new Date());
-            return toScript(script, user, referer, s, bal, pay, ord_id, logs);
+            return toScript(script, city, service, user, referer, s, bal, pay, ord_id, logs);
         }
         boolean checkNumber(String address) {
             boolean b = false;

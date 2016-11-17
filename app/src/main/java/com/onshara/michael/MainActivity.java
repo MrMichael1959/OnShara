@@ -2,13 +2,11 @@ package com.onshara.michael;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
@@ -99,11 +97,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
     void loadSharaPreferences() {
-        tvSystem.setText("Система: " + sp.getString(SYSTEM, ""));
-        tvPort.setText("Порт: " + sp.getString(PORT, ""));
-        tvService.setText("Служба: " + sp.getString(SERVICE, ""));
-        tvDriver.setText("Позывной: " + sp.getString(DRIVER, ""));
-        tvCost.setText("Сумма: " + sp.getString(COST, ""));
+        String s = "Система: " + sp.getString(SYSTEM, "");
+        tvSystem.setText(s);
+        s = "Порт: " + sp.getString(PORT, "");
+        tvPort.setText(s);
+        s = "Служба: " + sp.getString(SERVICE, "");
+        tvService.setText(s);
+        s = "Позывной: " + sp.getString(DRIVER, "");
+        tvDriver.setText(s);
+        s = "Сумма: " + sp.getString(COST, "");
+        tvCost.setText(s);
         tvDirs.setText(sp.getString(DIRS, " ").substring(1).replace(",",", "));
 
         if (sp.getBoolean(ON_TIME, false)) { tvOnTime.setText("Предварительные: Да"); }
@@ -122,15 +125,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             } else {
                 lastModified = s;
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
         SharedPreferences.Editor ed = sp.edit();
         ed.putString("lastModified", lastModified);
-        ed.commit();
+        ed.apply();
 
         return true;
     }

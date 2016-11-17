@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -162,9 +161,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         tvOnLineText += "На месте за 5мин.: ";
         if(on5min) { tvOnLineText += "ДА\n"; } else { tvOnLineText += "НЕТ\n"; }
         tvOnLineText += "Сумма: " + String.valueOf(cost) + "\n\n";
-//        tvOnLineText += sdirs.replace(",",", ");
         tvOnLine.setText(tvOnLineText);
-//        dirsLtLn = Sector.getDirsLtLn(sdirs);
         dirsLtLn = Sector.getDirsLtLn("");
 
         daemon.execute();
@@ -279,7 +276,6 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         scripts_host = sp.getString("scripts_host", "");
         system = sp.getString("system", "");
         port = sp.getString("port", "");
-//        service = sp.getString("service", "");
         driver = sp.getString("driver", "");
         password = sp.getString("password", "");
         cost = Double.valueOf(sp.getString("cost", "0.0"));
@@ -339,7 +335,6 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
 
             while (true) {
                 if(isCancelled()) {
-Log.d("Canceled ====>>>","true");
                     break;
                 }
                 double distance = Sector.getDistance(currlatitude, currlongitude, latitude, longitude);
@@ -351,8 +346,6 @@ Log.d("Canceled ====>>>","true");
                     requestSocket(MyJson.sendLocationStat(id), true);
                     String sector = Sector.getMySector(latitude, longitude);
                     sectorId = Sector.getSectorsInfo().get(sector).id;
-Log.d("Sector ====>>>",sector);
-Log.d("SectorId ====>>>",String.valueOf(sectorId));
                 }
                 if (latitude==0.0 || longitude==0.0){ continue; }
 
@@ -388,7 +381,6 @@ Log.d("SectorId ====>>>",String.valueOf(sectorId));
                 catch (InterruptedException e) { e.printStackTrace(); }
             }
 
-Log.d("Canceled ====>>>","Out");
             requestSocket(MyJson.logout(id), true);
             manager();
             finish();
@@ -448,9 +440,6 @@ Log.d("Canceled ====>>>","Out");
                     if(jobj.has("mg"))  {
                         mgHandler(jobj);
                     }
-//                    if(jobj.has("chsc"))  {
-//                        chscHandler(jobj);
-//                    }
                     if(jobj.has("dr"))    {
                         drHandler(jobj);
                     }
@@ -477,22 +466,12 @@ Log.d("Canceled ====>>>","Out");
                 e.printStackTrace();
             }
         }
-//        void chscHandler(JSONObject obj) {
-//            try {
-//                JSONObject chsc = obj.getJSONObject("chsc");
-//                int sid = chsc.getInt("id");
-//                int dc = chsc.getInt("dc");
-//          } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
         void drHandler(JSONObject obj) {
             try {
                 JSONObject dr = obj.getJSONObject("dr");
                 String data;
                 if(dr.has("dsc")) {
                     String nm = dr.getJSONObject("dsc").getString("nm");
-//                    int sid = dr.getJSONObject("dsc").getInt("id");
                     int dc = dr.getJSONObject("dsc").getInt("dc");
                     int dsp = dr.getInt("dsp");
                     data = "Сектор: " + nm + " (" + String.valueOf(dc) + " )" + "\n";
@@ -500,7 +479,6 @@ Log.d("Canceled ====>>>","Out");
                 } else {
                     data = "Сектор: по городу";
                 }
-Log.d("======>>> ", data);
                 publishProgress("tvSectorInfo", data);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -509,7 +487,6 @@ Log.d("======>>> ", data);
         void mgHandler(JSONObject obj) {
             try {
                 String te = obj.getJSONObject("mg").getString("te");
-Log.d("======>>> ", te);
                 publishProgress("mg", te);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -520,15 +497,8 @@ Log.d("======>>> ", te);
             try {
                 String orderId = String.valueOf(obj.getJSONObject("nooa").getInt("id"));
                 String op = obj.getJSONObject("nooa").getString("op");
-//                String oc = obj.getJSONObject("nooa").getString("oc");
                 String ot = obj.getJSONObject("nooa").getString("ot");
                 String of = obj.getJSONObject("nooa").getString("of");
-//                int opt = obj.getJSONObject("nooa").getInt("opt");
-Log.d("======>>>OrderType ", "nooa");
-Log.d("======>>>OrderId ", orderId);
-Log.d("======>>>OrderPrice ", op);
-Log.d("======>>>Откуда ", parseAddress(of));
-Log.d("======>>>Куда ", parseAddress(ot));
                 String data = "Тип ордера: Эфир\n";
                 data += "Номер ордера: " + orderId + "\n";
                 data += "Стоимость: " + op + "\n";
@@ -541,8 +511,6 @@ Log.d("======>>>Куда ", parseAddress(ot));
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
-Log.d("======>>>Coords From", String.valueOf(c.lat) + "  " + String.valueOf(c.lon));
-Log.d("======>>>Distance ", String.valueOf(d));
                 if(!pilot || Double.parseDouble(op)<cost || d>1.5) {
                     return;
                 }
@@ -556,7 +524,6 @@ Log.d("======>>>Distance ", String.valueOf(d));
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
-                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         nooaAssign(id, orderId);
                         return;
@@ -579,11 +546,6 @@ Log.d("======>>>Distance ", String.valueOf(d));
                 if (opt == 2) { sopt = "PROPOSED"; }
                 if (opt == 5) { sopt = "GPS"; }
                 if (opt!=2 && opt!=5) { return; }
-Log.d("======>>>OrderType ", sopt);
-Log.d("======>>>OrderId ", orderId);
-Log.d("======>>>OrderPrice ", op);
-Log.d("======>>>Откуда ", parseAddress(of));
-Log.d("======>>>Куда ", parseAddress(ot));
                 String data = "Тип ордера: " + sopt + "\n";
                 data += "Номер ордера: " + orderId + "\n";
                 data += "Стоимость: " + op + "\n";
@@ -593,16 +555,12 @@ Log.d("======>>>Куда ", parseAddress(ot));
 
                 IdLtLn c = getCoords(parseAddress(of));
                 if(c.lat==0.0 || c.lon==0.0 || status.equals("assign")) {
-Log.d("======>>>No coords From", "rejecting...");
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
-Log.d("======>>>Coords From", String.valueOf(c.lat) + "  " + String.valueOf(c.lon));
-Log.d("======>>>Distance ", String.valueOf(d));
                 if(!pilot || Double.parseDouble(op)<cost || d>1.5) {
                     rejectOrder(id, orderId, sopt);
-Log.d("======>>>Order ", "rejecting...");
                     return;
                 }
                 if (dirsLtLn.length == 0) {
@@ -611,13 +569,11 @@ Log.d("======>>>Order ", "rejecting...");
                 }
                 c = getCoords(parseAddress(ot));
                 if(c.lat==0.0 || c.lon==0.0) {
-Log.d("======>>>No coords To", "rejecting...");
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
-                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         poAssign(id, orderId, sopt);
                         return;
@@ -632,19 +588,12 @@ Log.d("======>>>No coords To", "rejecting...");
         }
         void npoHandler(JSONObject obj) {
             if (status.equals("assign")) { return; }
-//            orderType = "npo";
             try {
                 String orderId = String.valueOf(obj.getJSONObject("npo").getInt("id"));
                 String orderPrice = obj.getJSONObject("npo").getString("op");
                 String ost = obj.getJSONObject("npo").getString("ost");
                 String ot = obj.getJSONObject("npo").getString("ot");
                 String of = obj.getJSONObject("npo").getString("of");
-Log.d("======>>>OrderType ", "npo");
-Log.d("======>>>OrderId ", orderId);
-Log.d("======>>>OrderPrice ", orderPrice);
-Log.d("======>>>Time ", ost);
-Log.d("======>>>Of ", parseAddress(of));
-Log.d("======>>>Ot ", parseAddress(ot));
                 String data = "Тип ордера: Предварительный\n";
                 data += "Номер ордера: " + orderId + "\n";
                 data += "Стоимость: " + orderPrice + "\n";
@@ -658,18 +607,15 @@ Log.d("======>>>Ot ", parseAddress(ot));
 
                 IdLtLn c = getCoords(parseAddress(of));
                 if(c.lat==0.0 || c.lon==0.0) {
-Log.d("======>>>No coords From", "");
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
                 if(d > 1.5) {
-Log.d("======>>>DirDistance ", String.valueOf(d));
                     return;
                 }
 
                 c = getCoords(parseAddress(ot));
                 if(c.lat==0.0 || c.lon==0.0) {
-Log.d("======>>>No coords To", "");
                     return;
                 }
                 if (dirsLtLn.length == 0) {
@@ -678,7 +624,6 @@ Log.d("======>>>No coords To", "");
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(aDirsLtLn.lat, aDirsLtLn.lon, c.lat, c.lon);
-                    Log.d("======>>>DirDistance ", String.valueOf(d));
                     if (d < 1.5) {
                         npoAssign(id, orderId);
                     }
@@ -706,13 +651,6 @@ Log.d("======>>>No coords To", "");
                         ot += "\n[через: " + opp.getJSONObject(i).getString("ad") + "]";
                     }
                 }
-Log.d("======>>>OrderId ", String.valueOf(orderId));
-Log.d("======>>>OrderPrice ", nalPrice);
-Log.d("======>>>Beznal ", bnPrice);
-Log.d("======>>>Of ", of);
-Log.d("======>>>Ot ", ot);
-Log.d("======>>>Time ", time);
-Log.d("======>>>Phone ", callNumber);
                 String data = "Номер ордера: " + String.valueOf(orderId) + "\n";
                 data += "Стоимость: " + nalPrice + "\n";
                 data += "Безнал: " + bnPrice + "\n";
@@ -736,19 +674,16 @@ Log.d("======>>>Phone ", callNumber);
             requestSocket(response, true);
         }
         void nooaAssign(int id, String orderId) {
-Log.d("=======>>","nooaAssign");
             String response = MyJson.acceptOrderAir(id, orderId, on5min);
             requestSocket(response, true);
         }
         void poAssign(int id, String orderId, String opt) {
-Log.d("=======>>","poAssign");
             String response = MyJson.informOrderProposalShown(id, orderId);
             requestSocket(response, true);
             response = MyJson.acceptOrder(id, orderId, opt, on5min);
             requestSocket(response, true);
         }
         void npoAssign(int id, String orderId) {
-Log.d("=======>>","npoAssign");
             String response = MyJson.bookPreliminary(id, orderId);
             requestSocket(response, true);
             response = MyJson.acceptPreliminary(id, orderId);
@@ -789,7 +724,6 @@ Log.d("=======>>","npoAssign");
             if (res < 0) res = 60 + res;
             boolean b = false;
             if(res>=10 && res<=30) b = true;
-Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(b));
 
             return b;
         }
@@ -852,43 +786,41 @@ Log.d("===>>> Запас времени:", String.valueOf(res) + String.valueOf(
 
             return new IdLtLn(0, lat, lon);
         }
-    String toScript(String... args) {
-        String resultString;
-        String pars = "";
-        for (int i=1; i<args.length; i++) {
-            if (i == args.length-1) {
-                pars += "par" + String.valueOf(i) + "=" + args[i];
-            } else {
-                pars += "par" + String.valueOf(i) + "=" + args[i] + "&";
+        String toScript(String... args) {
+            String resultString;
+            String pars = "";
+            for (int i=1; i<args.length; i++) {
+                if (i == args.length-1) {
+                    pars += "par" + String.valueOf(i) + "=" + args[i];
+                } else {
+                    pars += "par" + String.valueOf(i) + "=" + args[i] + "&";
+                }
             }
-        }
-        try {
-            URL url = new URL(args[0]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            OutputStream os = conn.getOutputStream();
-            byte[] data = pars.getBytes("UTF-8");
-            os.write(data); os.flush(); os.close();
+            try {
+                URL url = new URL(args[0]);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                byte[] data = pars.getBytes("UTF-8");
+                os.write(data); os.flush(); os.close();
 
-//                data = null;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            InputStream is = conn.getInputStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) { baos.write(buffer, 0, bytesRead); }
-            data = baos.toByteArray();
-            baos.flush(); baos.close(); is.close();
-            resultString = new String(data, "UTF-8");
-            conn.disconnect();
-        } catch (MalformedURLException e) { resultString = "MalformedURLException:" + e.getMessage();
-        } catch (IOException e) { resultString = "IOException:" + e.getMessage();
-        } catch (Exception e) { resultString = "Exception:" + e.getMessage();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                InputStream is = conn.getInputStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) { baos.write(buffer, 0, bytesRead); }
+                data = baos.toByteArray();
+                baos.flush(); baos.close(); is.close();
+                resultString = new String(data, "UTF-8");
+                conn.disconnect();
+            } catch (MalformedURLException e) { resultString = "MalformedURLException:" + e.getMessage();
+            } catch (IOException e) { resultString = "IOException:" + e.getMessage();
+            } catch (Exception e) { resultString = "Exception:" + e.getMessage();
+            }
+            return resultString;
         }
-        return resultString;
-    }
         void  init() {
             String script = scripts_host + "init.php";
-//            String pars = "par1=" + driver + "&" + "par2=" + password;
             String _user = toScript(script, driver, password);
             JSONObject juser;
             String sBal = "";

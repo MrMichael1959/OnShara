@@ -2,7 +2,6 @@ package com.tests.michael.admin2;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -22,6 +20,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 public class UserLogsActivity extends Activity implements View.OnClickListener {
@@ -81,7 +80,7 @@ public class UserLogsActivity extends Activity implements View.OnClickListener {
                 getDrivers();
                 lvDrivers.setVisibility(View.VISIBLE);
                 lvLogs.setVisibility(View.GONE);
-                adapter = new ArrayAdapter<String>(this,
+                adapter = new ArrayAdapter<>(this,
                         android.R.layout.simple_list_item_1, driverBalanceList);
                 lvDrivers.setAdapter(adapter);
                 break;
@@ -105,11 +104,7 @@ public class UserLogsActivity extends Activity implements View.OnClickListener {
                 driversList[i] = jarrDrivers.getString(i);
                 driverBalanceList[i] = driversList[i] + " [" + jarrBalances.getString(i) + "]";
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (InterruptedException | ExecutionException | JSONException e) {
             e.printStackTrace();
         }
         if (result.equals("error")) {
@@ -123,7 +118,7 @@ public class UserLogsActivity extends Activity implements View.OnClickListener {
     public void showDriverLogs() {
         lvDrivers.setVisibility(View.GONE);
         lvLogs.setVisibility(View.VISIBLE);
-        ArrayAdapter<String> a = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> a = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, ordersList);
         lvLogs.setAdapter(a);
     }
@@ -131,54 +126,53 @@ public class UserLogsActivity extends Activity implements View.OnClickListener {
     public void getDriverLogs() {
         String script = scripts_host + "driver_logs.php";
         String result = "";
+        int count;
         try {
             result = (new MyScript()).execute(script, driver, referer, day).get();
-            JSONObject jresult = null;
-            JSONArray jarrBalance = null;
-            JSONArray jarrRoute = null;
+            JSONObject jresult;
+            JSONArray jarrBalance;
+            JSONArray jarrRoute;
             try {
                 jresult = new JSONObject(result);
                 jarrRoute = jresult.getJSONArray("route");
                 jarrBalance = jresult.getJSONArray("balance");
+                count = jarrRoute.length();
+                ordersList = new String[count];
+                JSONObject eo;
+                for (int i=0; i<count; i++) {
+                    try {
+                        eo = new JSONObject(jarrRoute.getString(i));
+                        String nalPrice = eo.getString("op");
+                        String bnPrice = eo.getString("oc");
+                        String of = eo.getString("of");
+                        String ot = eo.getString("ot");
+                        String time = eo.getString("ost");
+                        String callNumber = eo.getString("ocp");
+                        if (eo.has("opp")) {
+                            JSONArray opp = eo.getJSONArray("opp");
+                            for (int j=0; j<opp.length(); j++) {
+                                ot += "\n[через: " + opp.getJSONObject(j).getString("ad") + "]";
+                            }
+                        }
+                        String balance = jarrBalance.getString(i);
+                        String item = String.valueOf(i + 1) + ". ";
+                        item += "[баланс: " + balance + "]\n";
+                        item += "Откуда: " + of + "\n";
+                        item += "Куда: " + ot + "\n";
+                        item += "Нал: " + nalPrice + "\n";
+                        item += "Безнал: " + bnPrice + "\n";
+                        item += "На время: " + time + "\n";
+                        item += "Телефон: " + callNumber+ "\n";
+                        ordersList[i] = item;
+                    } catch (JSONException e) {
+                        ordersList[i] = "Error of data ...";
+                        e.printStackTrace();
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            int count = jarrRoute.length();
-            ordersList = new String[count];
-            JSONObject eo;
-            for (int i=0; i<count; i++) {
-                try {
-                    eo = new JSONObject(jarrRoute.getString(i));
-                    String nalPrice = eo.getString("op");
-                    String bnPrice = eo.getString("oc");
-                    String of = eo.getString("of");
-                    String ot = eo.getString("ot");
-                    String time = eo.getString("ost");
-                    String callNumber = eo.getString("ocp");
-                    if (eo.has("opp")) {
-                        JSONArray opp = eo.getJSONArray("opp");
-                        for (int j=0; j<opp.length(); j++) {
-                            ot += "\n[через: " + opp.getJSONObject(j).getString("ad") + "]";
-                        }
-                    }
-                    String balance = jarrBalance.getString(i);
-                    String item = String.valueOf(i + 1) + ". ";
-                    item += "[баланс: " + balance + "]\n";
-                    item += "Откуда: " + of + "\n";
-                    item += "Куда: " + ot + "\n";
-                    item += "Нал: " + nalPrice + "\n";
-                    item += "Безнал: " + bnPrice + "\n";
-                    item += "На время: " + time + "\n";
-                    item += "Телефон: " + callNumber+ "\n";
-                    ordersList[i] = item;
-                } catch (JSONException e) {
-                    ordersList[i] = "Error of data ...";
-                    e.printStackTrace();
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if (result.equals("error")) {
@@ -204,26 +198,12 @@ public class UserLogsActivity extends Activity implements View.OnClickListener {
                 dateAndTime.get(Calendar.DAY_OF_MONTH))
                 .show();
     }
-    // отображаем диалоговое окно для выбора времени
-    public void setTime() {
-        new TimePickerDialog(UserLogsActivity.this, t,
-                dateAndTime.get(Calendar.HOUR_OF_DAY),
-                dateAndTime.get(Calendar.MINUTE), true)
-                .show();
-    }
     // установка начальных даты и времени
     private void setInitialDateTime() {
-        day = new SimpleDateFormat("yyyy-MM-dd").format(dateAndTime.getTimeInMillis());
-        tvDate.setText("Дата: " + day);
+        day = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dateAndTime.getTimeInMillis());
+        String s = "Дата: " + day;
+        tvDate.setText(s);
     }
-    // установка обработчика выбора времени
-    TimePickerDialog.OnTimeSetListener t=new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            dateAndTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            dateAndTime.set(Calendar.MINUTE, minute);
-            setInitialDateTime();
-        }
-    };
     // установка обработчика выбора даты
     DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

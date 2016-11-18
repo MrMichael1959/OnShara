@@ -69,7 +69,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="73dp"
-        android:layout_marginEnd="73dp" />
+        android:layout_marginEnd="73dp"
+        android:lines="1" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -79,7 +80,8 @@
         android:layout_alignLeft="@+id/etSystem"
         android:layout_alignStart="@+id/etSystem"
         android:layout_alignRight="@+id/etSystem"
-        android:layout_alignEnd="@+id/etSystem" />
+        android:layout_alignEnd="@+id/etSystem"
+        android:lines="1" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -89,7 +91,8 @@
         android:layout_alignLeft="@+id/etPort"
         android:layout_alignStart="@+id/etPort"
         android:layout_alignRight="@+id/etPort"
-        android:layout_alignEnd="@+id/etPort" />
+        android:layout_alignEnd="@+id/etPort"
+        android:lines="1" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -99,7 +102,8 @@
         android:layout_alignLeft="@+id/etService"
         android:layout_alignStart="@+id/etService"
         android:layout_alignRight="@+id/etService"
-        android:layout_alignEnd="@+id/etService" />
+        android:layout_alignEnd="@+id/etService"
+        android:lines="1" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -109,7 +113,8 @@
         android:layout_alignRight="@+id/etDriver"
         android:layout_alignEnd="@+id/etDriver"
         android:layout_alignLeft="@+id/etDriver"
-        android:layout_alignStart="@+id/etDriver" />
+        android:layout_alignStart="@+id/etDriver"
+        android:lines="1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -167,7 +172,9 @@
         android:layout_alignBottom="@+id/tvCost"
         android:layout_alignRight="@+id/cbOnTime"
         android:layout_alignEnd="@+id/cbOnTime"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:numeric="decimal"
+        android:lines="1" />
 
     <Button
         android:layout_width="fill_parent"

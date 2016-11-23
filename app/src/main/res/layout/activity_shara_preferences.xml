@@ -1,200 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".SharaPreferencesActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:scrollbars="none" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Система"
-        android:id="@+id/tvSystem"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Порт"
-        android:id="@+id/tvPort"
-        android:layout_below="@+id/tvSystem"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Служба"
-        android:id="@+id/tvService"
-        android:layout_below="@+id/tvPort"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAppearance="@android:style/TextAppearance.Large" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Позывной"
-        android:id="@+id/tvDriver"
-        android:layout_below="@+id/tvService"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAppearance="@android:style/TextAppearance.Large" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Пароль"
-        android:id="@+id/tvPassword"
-        android:layout_below="@+id/tvDriver"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etSystem"
-        android:width="100dp"
-        android:layout_alignBottom="@+id/tvSystem"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="73dp"
-        android:layout_marginEnd="73dp"
-        android:lines="1" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etPort"
-        android:layout_above="@+id/tvService"
-        android:layout_alignLeft="@+id/etSystem"
-        android:layout_alignStart="@+id/etSystem"
-        android:layout_alignRight="@+id/etSystem"
-        android:layout_alignEnd="@+id/etSystem"
-        android:lines="1" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etService"
-        android:layout_above="@+id/tvDriver"
-        android:layout_alignLeft="@+id/etPort"
-        android:layout_alignStart="@+id/etPort"
-        android:layout_alignRight="@+id/etPort"
-        android:layout_alignEnd="@+id/etPort"
-        android:lines="1" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etDriver"
-        android:layout_alignBottom="@+id/tvDriver"
-        android:layout_alignLeft="@+id/etService"
-        android:layout_alignStart="@+id/etService"
-        android:layout_alignRight="@+id/etService"
-        android:layout_alignEnd="@+id/etService"
-        android:lines="1" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etPassword"
-        android:layout_alignBottom="@+id/tvPassword"
-        android:layout_alignRight="@+id/etDriver"
-        android:layout_alignEnd="@+id/etDriver"
-        android:layout_alignLeft="@+id/etDriver"
-        android:layout_alignStart="@+id/etDriver"
-        android:lines="1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Предварительные"
-        android:id="@+id/tvOnTime"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tvPassword"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="29dp" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cbOnTime"
-        android:layout_alignBottom="@+id/tvOnTime"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="На месте за 5мин."
-        android:id="@+id/tv5min"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tvOnTime"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cb5min"
-        android:layout_alignBottom="@+id/tv5min"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сумма"
-        android:id="@+id/tvCost"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tv5min"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:width="100dp"
-        android:id="@+id/etCost"
-        android:layout_alignBottom="@+id/tvCost"
-        android:layout_alignRight="@+id/cbOnTime"
-        android:layout_alignEnd="@+id/cbOnTime"
-        android:inputType="numberDecimal"
-        android:numeric="decimal"
-        android:lines="1" />
-
-    <Button
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Направления"
-        android:id="@+id/btnDirs"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tvCost"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="Система"
+            android:id="@+id/etSystem" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Порт"
+            android:inputType="number"
+            android:id="@+id/etPort" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="Служба"
+            android:id="@+id/etService"  />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Позывной"
+            android:id="@+id/etDriver" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Пароль"
+            android:id="@+id/etPassword" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvDirs"
-        android:layout_below="@+id/btnDirs"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginTop="29dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Предварительные"
+            android:id="@+id/tvOnTime"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</RelativeLayout>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbOnTime" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="На месте за 5мин."
+            android:id="@+id/tv5min"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cb5min" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/etMyLocation"
+                android:hint="Моё местоположение: " />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cbMyLocation" />
+
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="100dp"
+            android:hint="Сумма"
+            android:id="@+id/etCost"
+            android:inputType="number" />
+
+</LinearLayout>
+</ScrollView>
+

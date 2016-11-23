@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     TextView tvOnTime;
     TextView tvCost;
     TextView tvDirs;
+    TextView tvMyLocation;
     TextView tv5min;
     Button btnChange;
     Button btnOnLine;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         tv5min = (TextView) findViewById(R.id.tv5min);
         tvCost = (TextView) findViewById(R.id.tvCost);
         tvDirs = (TextView) findViewById(R.id.tvDirs);
+        tvMyLocation = (TextView) findViewById(R.id.tvMyLocation);
 
         btnChange = (Button)findViewById(R.id.btnChange);
         btnOnLine = (Button)findViewById(R.id.btnOnLine);
@@ -114,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         if (sp.getBoolean(ON_5MIN, false)) { tv5min.setText("На месте за 5мин.: Да"); }
         else { tv5min.setText("На месте за 5мин.: Нет"); }
+
+        if (sp.getBoolean("cb_my_location", false)) { tvMyLocation.setText("Мое местоположение: Да"); }
+        else { tvMyLocation.setText("Мое местоположение: Нет"); }
     }
 
     boolean checkUpdate() {

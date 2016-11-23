@@ -81,6 +81,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     boolean pilot = false;
     boolean ontime = false;
     boolean on5min = false;
+    boolean cb_my_location = false;
 
     double latitude = 0.0;
     double longitude = 0.0;
@@ -89,6 +90,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     double currlongitude = 0.0;
     long currlocationTime = 0L;
     String city = "";
+    String my_location = "";
     String scripts_host = "";
     String callNumber = null;
     String tvOnLineText = "";
@@ -172,6 +174,11 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     protected void onResume() {
 //--------------------------------------------------------------------------------------------------
         super.onResume();
+        if (cb_my_location) {
+            tvAddress.setText(my_location);
+            return;
+        }
+
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     1000 * 10, 10, locationListener);
@@ -283,6 +290,8 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         ontime = sp.getBoolean("on_time", false);
         on5min = sp.getBoolean("on_5min", false);
         device_id = sp.getString("device_id", "");
+        cb_my_location = sp.getBoolean("cb_my_location", false);
+        my_location = sp.getString("my_location", "");
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -316,6 +325,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         @Override
         protected Void doInBackground(Void... values) {
             init();
+            if (cb_my_location) setMyLocation();
             publishProgress("balance");
             if (balance < 0) {
                 publishProgress("badBalance", "У Вас отрицательный баланс: " +
@@ -465,6 +475,12 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        void setMyLocation() {
+            IdLtLn coords = getCoords(city + ", " + my_location);
+            currlatitude = coords.lat;
+            currlongitude = coords.lon;
+            currlocationTime = new Date().getTime();
         }
         void drHandler(JSONObject obj) {
             try {

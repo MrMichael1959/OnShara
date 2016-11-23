@@ -18,8 +18,10 @@ public class SharaPreferencesActivity extends AppCompatActivity implements View.
     EditText etDriver;
     EditText etPassword;
     EditText etCost;
+    EditText etMyLocation;
     CheckBox cbOnTime;
     CheckBox cb5min;
+    CheckBox cbMyLocation;
     Button btnDirs;
 
     SharedPreferences sp;
@@ -45,14 +47,16 @@ public class SharaPreferencesActivity extends AppCompatActivity implements View.
         etDriver = (EditText) findViewById(R.id.etDriver);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etCost = (EditText) findViewById(R.id.etCost);
+        etMyLocation = (EditText) findViewById(R.id.etMyLocation);
 //        tvOnTime = (TextView) findViewById(R.id.tvOnTime);
 //        tvDirs = (TextView) findViewById(R.id.tvDirs);
         cbOnTime = (CheckBox) findViewById(R.id.cbOnTime);
 //        cbToEnd = (CheckBox) findViewById(R.id.cbToEnd);
         cb5min = (CheckBox) findViewById(R.id.cb5min);
-        btnDirs = (Button) findViewById(R.id.btnDirs);
+        cbMyLocation = (CheckBox) findViewById(R.id.cbMyLocation);
+//        btnDirs = (Button) findViewById(R.id.btnDirs);
 
-        btnDirs.setOnClickListener(this);
+//        btnDirs.setOnClickListener(this);
 
     }
 
@@ -87,7 +91,9 @@ public class SharaPreferencesActivity extends AppCompatActivity implements View.
             String s = etCost.getText().toString();
             if(s.equals("") || s==null) s = "0.0";
         ed.putString(COST, s);
-        ed.commit();
+        ed.putBoolean("cb_my_location", cbMyLocation.isChecked());
+        ed.putString("my_location", etMyLocation.getText().toString());
+        ed.apply();
     }
 
     void loadSharaPreferences() {
@@ -100,6 +106,8 @@ public class SharaPreferencesActivity extends AppCompatActivity implements View.
         cbOnTime.setChecked(sp.getBoolean(ON_TIME, false));
         cb5min.setChecked(sp.getBoolean(ON_5MIN, false));
         etCost.setText(sp.getString(COST, ""));
+        cbMyLocation.setChecked(sp.getBoolean("cb_my_location", false));
+        etMyLocation.setText(sp.getString("my_location", ""));
     }
 
 }

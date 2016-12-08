@@ -1,8 +1,10 @@
 package com.onshara.michael;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +64,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         btnChange.setOnClickListener(this);
         btnOnLine.setOnClickListener(this);
         btnPayment.setOnClickListener(this);
+
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INSTALL_PACKAGES,
+                Manifest.permission.DELETE_PACKAGES
+        }, 1);
 
         sp = getSharedPreferences(SHARA_PREF,MODE_PRIVATE);
         SharedPreferences.Editor ed = sp.edit();

@@ -31,6 +31,7 @@ public class PaymentActivity extends AppCompatActivity {
     String card = "";
     String cost = "";
     String strDateAndTime = "";
+    String scripts_host = "";
 
     SharedPreferences sp;
 
@@ -53,23 +54,22 @@ public class PaymentActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button);
 
         sp = getSharedPreferences(SHARA_PREF,MODE_PRIVATE);
-        driver = sp.getString(DRIVER, "");
-        password = sp.getString(PASSWORD, "");
-
     }
 
     public void toSend(View v) {
         card = editCard.getText().toString();
         cost = editCost.getText().toString();
+        driver = sp.getString(DRIVER, "");
+        password = sp.getString(PASSWORD, "");
+        scripts_host = sp.getString("scripts_host", "");
 
         String result = "";
-            try {
-                result = new SendPayment().execute(driver, password, strDateAndTime, card, cost).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+        try {
+            result = new _Script().execute(scripts_host + "send_payment.php",
+                    driver, password, strDateAndTime, card, cost).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         if (result.equals("error")) {
             result = "Ошибка. Повторите попытку !!!";
             Toast toast = Toast.makeText(PaymentActivity.this, result, Toast.LENGTH_LONG);

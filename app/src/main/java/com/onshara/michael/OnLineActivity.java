@@ -315,7 +315,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
     class Daemon extends AsyncTask<Void, String, Void> {
 //**************************************************************************************************
         Socket socket = null;
-        String server_IP = "136.243.10.152";
+        String server_IP = "148.251.123.13";
         int server_Port = 9741;
 
         @Override

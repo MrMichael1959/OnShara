@@ -310,13 +310,31 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
         }
         return address;
     }
+//--------------------------------------------------------------------------------------------------
+    IdLtLn getLatLng(String addr){
+//--------------------------------------------------------------------------------------------------
+        Geocoder coder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+        IdLtLn latlng = null;
+        try {
+            addresses = coder.getFromLocationName(addr, 1);
+            if (addresses==null || addresses.size()==0) { return null; }
+            latlng = new IdLtLn(0, addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return latlng;
+    }
 
 //**************************************************************************************************
     class Daemon extends AsyncTask<Void, String, Void> {
 //**************************************************************************************************
         Socket socket = null;
-        String server_IP = "148.251.123.13";
+//        String server_IP = "148.251.123.13";
+        String server_IP = "94.130.219.91";
         int server_Port = 9741;
+
+        double R = 1.25;
 
         @Override
         protected void onPreExecute() {
@@ -477,7 +495,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
             }
         }
         void setMyLocation() {
-            IdLtLn coords = getCoords(city + ", " + my_location);
+            IdLtLn coords = getLatLng(city + ", " + my_location);
             currlatitude = coords.lat;
             currlongitude = coords.lon;
             currlocationTime = new Date().getTime();
@@ -522,25 +540,25 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                 data += "Куда: " + ot;
                 publishProgress("tvBodyOnLine", data);
 
-                IdLtLn c = getCoords(parseAddress(of));
+                IdLtLn c = getLatLng(parseAddress(of));
                 if(c.lat==0.0 || c.lon==0.0) {
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
-                if(!pilot || Double.parseDouble(op)<cost || d>1.5) {
+                if(!pilot || Double.parseDouble(op)<cost || d>R) {
                     return;
                 }
                 if (dirsLtLn.length == 0) {
                     nooaAssign(id, orderId);
                     return;
                 }
-                c = getCoords(parseAddress(ot));
+                c = getLatLng(parseAddress(ot));
                 if(c.lat==0.0 || c.lon==0.0) {
                     return;
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
-                    if (d < 1.5) {
+                    if (d < R) {
                         nooaAssign(id, orderId);
                         return;
                     }
@@ -569,13 +587,13 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                 data += "Куда: " + ot;
                 publishProgress("tvBodyOnLine", data);
 
-                IdLtLn c = getCoords(parseAddress(of));
+                IdLtLn c = getLatLng(parseAddress(of));
                 if(c.lat==0.0 || c.lon==0.0 || status.equals("assign")) {
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
-                if(!pilot || Double.parseDouble(op)<cost || d>1.5) {
+                if(!pilot || Double.parseDouble(op)<cost || d>R) {
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
@@ -583,14 +601,14 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                     poAssign(id, orderId, sopt);
                     return;
                 }
-                c = getCoords(parseAddress(ot));
+                c = getLatLng(parseAddress(ot));
                 if(c.lat==0.0 || c.lon==0.0) {
                     rejectOrder(id, orderId, sopt);
                     return;
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(c.lat, c.lon, aDirsLtLn.lat, aDirsLtLn.lon);
-                    if (d < 1.5) {
+                    if (d < R) {
                         poAssign(id, orderId, sopt);
                         return;
                     } else {
@@ -621,16 +639,16 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                 if(!pilot || Double.parseDouble(orderPrice)<cost) { return; }
                 if(!checkTime(ost)) { return; }
 
-                IdLtLn c = getCoords(parseAddress(of));
+                IdLtLn c = getLatLng(parseAddress(of));
                 if(c.lat==0.0 || c.lon==0.0) {
                     return;
                 }
                 Double d = Sector.getDistance(latitude, longitude, c.lat, c.lon);
-                if(d > 1.5) {
+                if(d > R) {
                     return;
                 }
 
-                c = getCoords(parseAddress(ot));
+                c = getLatLng(parseAddress(ot));
                 if(c.lat==0.0 || c.lon==0.0) {
                     return;
                 }
@@ -640,7 +658,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
                 }
                 for (IdLtLn aDirsLtLn : dirsLtLn) {
                     d = Sector.getDistance(aDirsLtLn.lat, aDirsLtLn.lon, c.lat, c.lon);
-                    if (d < 1.5) {
+                    if (d < R) {
                         npoAssign(id, orderId);
                     }
                 }
@@ -836,7 +854,7 @@ public class OnLineActivity extends AppCompatActivity implements OnClickListener
             return resultString;
         }
         void  init() {
-            String script = scripts_host + "init.php";
+            String script = scripts_host + "shara_init.php";
             String _user = toScript(script, driver, password);
             JSONObject juser;
             String sBal = "";
